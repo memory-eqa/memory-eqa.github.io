@@ -100,7 +100,7 @@
     <div class="tldr">
       <p><b>TL;DR</b> 
         The paper proposes MemoryEQA, a memory-centric embodied question answering (EQA) framework with the MT-HM3D dataset for evaluate memory ability of EQA models, 
-        boosting performance by 19.8% on MT-HM3D from baseline model.</p>
+        boosting performance by 3.4% on MT-HM3D from prior sota model.</p>
     </div>
 
     <div class="section">
@@ -113,18 +113,17 @@
     <div class="section">
       <div class="section-title">Introduction</div>
       <p class="intro">
-        Embodied Question Answering (EQA) requires agents to autonomously explore and understand the environment to answer context-dependent questions.
-        Existing frameworks typically center around the planner, which guides the stopping module, memory module, and answering module for reasoning. 
-        In this paper, we propose a memory-centric EQA framework named MemoryEQA. 
-        Unlike planner-centric EQA models where the memory module cannot fully interact with other modules, MemoryEQA flexible feeds memory information 
-        into all modules, thereby enhancing efficiency and accuracy in handling complex tasks, such as those involving multiple targets across different regions.
-        Specifically, we establish a multi-modal hierarchical memory mechanism, which is divided into global memory that stores language-enhanced scene maps, 
-        and local memory that retains historical observations and state information. 
-        When performing EQA tasks, the multi-modal large language model is leveraged to convert memory information into the required input formats for injection into different modules.
-        To evaluate EQA models' memory capabilities, we constructed the MT-HM3D dataset based on HM3D, comprising 1,587 question-answer pairs involving 
-        multiple targets across various regions, which requires agents to maintain memory of exploration-acquired target information.
-        Experimental results on HM-EQA, MT-HM3D, and OpenEQA demonstrate the effectiveness of our framework, where a 19.8\% performance gain on MT-HM3D 
-        compared to baseline model further underscores memory capability's pivotal role in resolving complex tasks.
+        Embodied Question Answering (EQA) requires agents to explore environments and reason over observations to answer questions. 
+        However, suboptimal exploration and inaccurate answers remain challenging in complex EQA tasks involving multiple regions and targets.
+        These problems stem from ineffective memory construction and indiscriminate memory retrieval, leading to failures across modules.
+        The planner lacks global context to guide exploration, the stopping module cannot reliably determine whether sufficient evidence has been collected, and the answering module receives incomplete or irrelevant information.
+        In this paper, we propose a memory-centric EQA method that treats memory as a central component for both exploration and reasoning. 
+        Our method continuously updates memory during exploration and retrieves module-specific information for planning, stopping, and answering.
+        We first construct a multi-modal structured memory that accumulates both scene-level and object-level evidence. 
+        To maintain memory quality, we introduce a viewpoint comparison strategy that filters redundant and noisy observations. 
+        Furthermore, we develop an entropy-based adaptive retrieval mechanism that dynamically controls the scope of retrieved memory for each module, ensuring efficient and non-redundant reasoning.
+        To evaluate our approach in scenarios that demand memory capabilities, we introduce a new EQA benchmark, MT-HM3D, which focuses on multi-target and multi-region reasoning.
+        Experiments on MT-HM3D, HM-EQA, and OpenEQA demonstrate that our method effectively improves exploration efficiency and answer accuracy.
       </p>
     </div>
 
@@ -175,29 +174,28 @@
       <div class="intro">
         <b>Metric.</b> 
         In the <b>MT-HM3D</b> and <b>HM-EQA</b> dataset, we measure two metrics for agents, including
-        <i><b>Succ. (Success Rate)</b></i>, and <i><b>Step (Normalization Step)</b></i>. 
         <i><b>Succ.</b></i> measures the correctness of predicted answers. 
-        <i><b>Step</b></i> means the efficiency of exploration. 
-        In the <b>OpenEQA</b>, we use three metrics for agents, including <i><b>GPT Score</b></i>, <i><b>ROUGE_L</b></i> and <i><b>Step (Normalization Step)</b></i>.
-        <i><b>GPT Score</b></i> measures the correctness of predicted answers.
-        <i><b>ROUGE_L</b></i> measures the similirity between predicted open-vocabulary answers and ground-truth answers.
+        <i><b>Success weighted by path length (SPL)</b></i> to evaluate the efficiency of the agents.
+        <i><b>LLM-Match</b></i> measures the similirity between predicted open-vocabulary answers and ground-truth answers.
+        <i><b>Length</b></i> measures the length of exploration path between predicted open-vocabulary answers and ground-truth answers.
         <br>
       </div>
 
       <div class="intro">
         <b>Results.</b> 
-        On MT-HM3D, MemoryEQA attains a success rate of 54.5%, outperforming baseline by 18.9% (Exp.3), highlighting the critical role of hierarchical memory in multi-target tasks. 
-        The results demonstrate that MemoryEQA exhibits superior performance in multi-modal reasoning tasks, particularly in complex scene understanding and knowledge integration.
-        The analysis of experimental results across Exp.1-3, Exp.4-5, and Exp.6-7 reveals a significant positive correlation between the performance of the VLM and the effectiveness 
-        of the EQA system. This observation underscores the critical role that VLM plays in enhancing the EQA system's ability to process and interpret complex queries within visual 
-        environments. As the VLM's accuracy and understanding improve, so does the EQA system's capacity to deliver precise and contextually relevant answers, demonstrating a synergistic 
-        relationship between the two components. This finding highlights the importance of advancing VLM capabilities to further boost the overall performance of EQA systems in practical 
-        applications.
+        To comprehensively evaluate MemoryEQA, we adopt the active EQA setting. We first assess memory capability on the multi-target dataset MT-HM3D, and then evaluate performance on general tasks using the widely used HM-EQA and OpenEQA benchmark.
+        MemoryEQA achieves the largest performance gains on MT-HM3D, highlighting the importance of explicit memory management and module-specific retrieval in complex, memory-intensive scenarios.
+        It also improves efficiency across benchmarks by reducing redundant exploration and enabling more direct access to task-relevant evidence.
+        Furthermore, MemoryEQA delivers strong category-wise performance, particularly on tasks requiring multi-target reasoning and cross-region evidence aggregation.
         <br>
       </div>
       <el-card class="stats-img-1">
-        <el-image src="./results/result.png"></el-image>
+        <el-image src="./results/result1.png"></el-image>
       </el-card>
+      <el-card class="stats-img-1">
+        <el-image src="./results/result2.png"></el-image>
+      </el-card>
+      
       
     </div>
 
