@@ -19,7 +19,7 @@
         </span>
         <span class="author">
           <el-link href="https://zhigao2017.github.io/">Zhi Gao</el-link>
-          <span class="ind">1,2 &#9733;
+          <span class="ind">1,2 &#9733;</span>
         </span>
         <span class="author">
           <el-link href="https://wu-yuwei-bit.github.io/">Yuwei Wu</el-link>
